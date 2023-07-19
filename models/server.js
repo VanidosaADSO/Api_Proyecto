@@ -16,9 +16,6 @@ const storage = multer.diskStorage({
 // Middleware de multer para procesar la carga de imágenes
 const upload = multer({ storage });
 
-// Asegúrate de tener la referencia a los controladores que hemos mencionado en el código de abajo
-const { getservicio, postservicio } = require('../controllers/servicio');
-
 class Server {
     
     constructor() {
@@ -47,6 +44,8 @@ class Server {
             preflightContinue: false,
             optionsSuccessStatus: 204
         }))
+
+        upload.single('Imagen'), // Agregar el middleware de multer para cargar la imagen
 
         this.app.use(bodyParser.json())
         this.app.use(express.static('public'))

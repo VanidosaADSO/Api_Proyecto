@@ -7,10 +7,8 @@ const upload = multer({ dest: 'uploads/' });
 const { getservicio, postservicio, putservicio, patchservicio, deleteservicio } = require('../controllers/servicio')
 
 router.get('/', getservicio)
+router.post(
 
-this.app.post(
-    this.servicioPath,
-    upload.single('Imagen'), // Agregar el middleware de multer para cargar la imagen
     [
       check('Nombre', 'El nombre es obligatorio').not().isEmpty(),
       check('Tiempo', 'El tiempo es obligatorio').not().isEmpty(),
