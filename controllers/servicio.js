@@ -7,18 +7,17 @@ const getservicio = async (req, res) => {
     })
 }
 
+const servicios = require('../models/servicio');
+
 const postservicio = async (req, res) => {
+    const { Nombre, Tiempo, Precio, Descripcion, Estado } = req.body;
 
-    const { Nombre, Tiempo, Precio, Descripcion, Imagen, Estado } = req.body
-    // const { path } = req.file;
-    const servicio1 = new servicios({ Nombre, Tiempo, Precio, Descripcion, Imagen, Estado })
-    await servicio1.save()
-
-    res.json({
-        servicio1
-    })
-
-}
+    const Imagen = req.file ? req.file.path : undefined; // Obtener la URL de la imagen cargada por multer
+    
+    const servicio1 = new servicios({ Nombre, Tiempo, Precio, Descripcion, Imagen, Estado });
+    await servicio1.save();
+    res.json({ servicio1 });
+};
 
 const putservicio = async (req, res) => {
     const { _id, Nombre, Tiempo, Precio, Descripcion, Imagen, Estado } = req.body

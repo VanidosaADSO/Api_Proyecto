@@ -8,21 +8,20 @@ const { getservicio, postservicio, putservicio, patchservicio, deleteservicio } 
 
 router.get('/', getservicio)
 
-router.post('/', [
-    check('Nombre', 'El nombre es obligatorio').not().isEmpty(),
-
-    check('Tiempo', 'El tiempo es obligatorio').not().isEmpty(),
-
-    check('Precio', 'El precio es obligatorio').not().isEmpty(),
-
-    check('Descripcion', 'La descripcion es obligatoria').not().isEmpty(),
-
-    check('Imagen', 'La imagen es obligatoria'),
-
-    // check('Estado', 'El estado es obligatorio').not().isEmpty(),
-
-    validarCampos
-], postservicio)
+this.app.post(
+    this.servicioPath,
+    upload.single('Imagen'), // Agregar el middleware de multer para cargar la imagen
+    [
+      check('Nombre', 'El nombre es obligatorio').not().isEmpty(),
+      check('Tiempo', 'El tiempo es obligatorio').not().isEmpty(),
+      check('Precio', 'El precio es obligatorio').not().isEmpty(),
+      check('Descripcion', 'La descripcion es obligatoria').not().isEmpty(),
+      // check('Estado', 'El estado es obligatorio').not().isEmpty(),
+      validarCampos,
+    ],
+    postservicio
+  );
+  
 
 router.put('/', putservicio)
 

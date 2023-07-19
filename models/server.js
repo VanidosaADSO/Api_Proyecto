@@ -2,8 +2,25 @@ const express = require('express')
 const cors = require('cors')
 const bodyParser = require('body-parser')
 const { dbConnetion } = require('../database/config')
-  
+const multer = require('multer');
+const path = require('path');
+
+// Configuración de multer para guardar las imágenes en la carpeta 'uploads'
+const storage = multer.diskStorage({
+  destination: './uploads', // Carpeta donde se guardarán las imágenes
+  filename: function (req, file, cb) {
+    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+  }
+});
+
+// Middleware de multer para procesar la carga de imágenes
+const upload = multer({ storage });
+
+// Asegúrate de tener la referencia a los controladores que hemos mencionado en el código de abajo
+const { getservicio, postservicio } = require('../controllers/servicio');
+
 class Server {
+    
     constructor() {
         this.app = express()
         this.port = process.env.PORT
