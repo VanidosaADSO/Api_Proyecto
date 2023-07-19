@@ -6,14 +6,11 @@ const getservicio = async (req, res) => {
         servicio
     })
 }
-
-const servicios = require('../models/servicio');
-
 const postservicio = async (req, res) => {
     const { Nombre, Tiempo, Precio, Descripcion, Estado } = req.body;
 
     const Imagen = req.file ? req.file.path : undefined; // Obtener la URL de la imagen cargada por multer
-    
+
     const servicio1 = new servicios({ Nombre, Tiempo, Precio, Descripcion, Imagen, Estado });
     await servicio1.save();
     res.json({ servicio1 });
