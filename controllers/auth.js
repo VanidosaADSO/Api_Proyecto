@@ -24,7 +24,6 @@ const login = async (req,res) => {
         }
         const token = await generarJWT(Usuario._id)
         res.json({
-            usuario,
             token
         })
         console.log('SESION INICIADA')
