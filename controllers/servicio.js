@@ -7,21 +7,10 @@ const getservicio = async (req, res) => {
     })
 }
 const postservicio = async (req, res) => {
-
     const { Nombre, Tiempo, Precio, Descripcion, Imagen, Estado } = req.body;
 
-    // Convertir la imagen base64 en Buffer
-    const imageData = Buffer.from(Imagen.split(',')[1], 'base64');
 
-    // Crear un documento en MongoDB para almacenar la imagen
-    const newImage = new ImageModel({
-        data: imageData,
-        contentType: 'image/jpg', // Asegúrate de ajustar el tipo de contenido según el formato de imagen que estés enviando
-    });
-
-    // Guardar la imagen en la base de datos
-    const savedImage = await newImage.save();
-    const servicio1 = new servicios({ Nombre, Tiempo, Precio, Descripcion, Imagen: savedImage._id, Estado });
+    const servicio1 = new servicios({ Nombre, Tiempo, Precio, Descripcion, Imagen, Estado });
     await servicio1.save();
     res.json({ servicio1 });
 };
