@@ -7,11 +7,21 @@ const getservicio = async (req, res) => {
     })
 }
 const postservicio = async (req, res) => {
-    const { Nombre, Tiempo, Precio, Descripcion, Estado } = req.body;
 
-    const Imagen = req.file ? req.file.path : undefined; // Obtener la URL de la imagen cargada por multer
+    const { Nombre, Tiempo, Precio, Descripcion, Imagen, Estado } = req.body;
 
-    const servicio1 = new servicios({ Nombre, Tiempo, Precio, Descripcion, Imagen, Estado });
+    // Convertir la imagen base64 en Buffer
+    const imageData = Buffer.from(Imagen.split(',')[1], 'base64');
+
+    // Crear un documento en MongoDB para almacenar la imagen
+    const newImage = new ImageModel({
+        data: imageData,
+        contentType: 'image/png', // Asegúrate de ajustar el tipo de contenido según el formato de imagen que estés enviando
+    });
+
+    // Guardar la imagen en la base de datos
+    const savedImage = await newImage.save();
+    const servicio1 = new servicios({ Nombre, Tiempo, Precio, Descripcion, Imagen: savedImage._id, Estado });
     await servicio1.save();
     res.json({ servicio1 });
 };

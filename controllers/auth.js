@@ -33,8 +33,6 @@ const login = async (req, res) => {
         console.log(error);
     }
 
-    // Si el password existe en la base de datos
-
 };
 
 module.exports = {

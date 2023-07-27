@@ -1,5 +1,10 @@
 const { Schema, model } = require('mongoose')
 
+const imageSchema = new Schema({
+    data: Buffer,
+    contentType: String,
+  });
+  
 const ServicioSchema = Schema({
     Nombre: {
         type: String,
@@ -18,7 +23,7 @@ const ServicioSchema = Schema({
         required: [true, 'La descripcion es un campo obligatorio']
     },
     Imagen:{
-        type:String,
+        type:imageSchema,
         required: [true, 'La imagen es un campo obligatorio']
     },
     Estado: {

@@ -2,19 +2,6 @@ const express = require('express')
 const cors = require('cors')
 const bodyParser = require('body-parser')
 const { dbConnetion } = require('../database/config')
-const multer = require('multer');
-const path = require('path');
-
-// Configuración de multer para guardar las imágenes en la carpeta 'uploads'
-const storage = multer.diskStorage({
-  destination: './uploads', // Carpeta donde se guardarán las imágenes
-  filename: function (req, file, cb) {
-    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-  }
-});
-
-// Middleware de multer para procesar la carga de imágenes
-const upload = multer({ storage });
 
 class Server {
     
@@ -44,8 +31,6 @@ class Server {
             preflightContinue: false,
             optionsSuccessStatus: 204
         }))
-
-        upload.single('Imagen'), // Agregar el middleware de multer para cargar la imagen
 
         this.app.use(bodyParser.json())
         this.app.use(express.static('public'))
