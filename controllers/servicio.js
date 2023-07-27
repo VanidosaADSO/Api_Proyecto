@@ -16,7 +16,7 @@ const postservicio = async (req, res) => {
     // Crear un documento en MongoDB para almacenar la imagen
     const newImage = new ImageModel({
         data: imageData,
-        contentType: 'image/png', // Asegúrate de ajustar el tipo de contenido según el formato de imagen que estés enviando
+        contentType: 'image/jpg', // Asegúrate de ajustar el tipo de contenido según el formato de imagen que estés enviando
     });
 
     // Guardar la imagen en la base de datos
