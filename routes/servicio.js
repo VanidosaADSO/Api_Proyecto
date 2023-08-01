@@ -2,8 +2,6 @@ const { Router } = require('express');
 const router = Router();
 const { check } = require('express-validator');
 const { validarCampos } = require('../middlewares/validar-campos');
-const multer = require('multer');
-const upload = multer({ dest: 'uploads/' });
 const { getservicio, postservicio, putservicio, patchservicio, deleteservicio } = require('../controllers/servicio')
 
 router.get('/', getservicio)

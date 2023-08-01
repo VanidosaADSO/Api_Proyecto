@@ -16,6 +16,7 @@ class Server {
         this.insumosPath = '/api/insumo'
         this.citasPath = '/api/cita'
         this.rolPath = '/api/rol'
+        this.OlvidocontrasenaPath = '/api/olvidocontrasena'
         this.conetarDB()
         this.middlewares()
         this.routes()
@@ -48,6 +49,7 @@ class Server {
         this.app.use(this.insumosPath, require('../routes/insumo'));
         this.app.use(this.citasPath, require('../routes/cita'));
         this.app.use(this.rolPath, require('../routes/rol'));
+        this.app.use(this.OlvidocontrasenaPath, require('../routes/resContrasena'));
     }
 
     listen() {

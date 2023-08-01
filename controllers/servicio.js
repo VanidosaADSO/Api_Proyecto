@@ -6,14 +6,18 @@ const getservicio = async (req, res) => {
         servicio
     })
 }
+
 const postservicio = async (req, res) => {
-    const { Nombre, Tiempo, Precio, Descripcion, Imagen, Estado } = req.body;
 
+    const { Nombre, Tiempo, Precio, Descripcion, Imagen, Estado } = req.body
+    const servicio1 = new servicios({ Nombre, Tiempo, Precio, Descripcion, Imagen, Estado })
+    await servicio1.save()
 
-    const servicio1 = new servicios({ Nombre, Tiempo, Precio, Descripcion, Imagen, Estado });
-    await servicio1.save();
-    res.json({ servicio1 });
-};
+    res.json({
+        servicio1
+    })
+
+}
 
 const putservicio = async (req, res) => {
     const { _id, Nombre, Tiempo, Precio, Descripcion, Imagen, Estado } = req.body
