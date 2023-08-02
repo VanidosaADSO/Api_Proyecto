@@ -5,7 +5,7 @@ const generarJWT = (uid = '') => {
         //promesa
         const paylaod = {uid}
         jwt.sign(paylaod, process.env.SECRECTKEY,{
-            expiresIn : '1m',
+            expiresIn : '1h',
         }, (err, token) => {
             if(err){
                 reject('err al generar el token')

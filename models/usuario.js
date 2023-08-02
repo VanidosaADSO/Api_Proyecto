@@ -46,6 +46,9 @@ const UsuarioSchema = Schema({
     Estado: {
         type: Boolean,
         default:true
+    },
+    token:{
+        type:String
     }
 })
 
