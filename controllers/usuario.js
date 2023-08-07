@@ -24,10 +24,11 @@ const postUsuario = async (req, res) => {
 
 const putUsuario = async (req, res) => {
     const {_id, Nombre, Apellido, Tipo_Documento, Documento, Direccion, Telefono, Correo, Contrasena, Rol, Estado } = req.body
+    const hashedPassword = await bcrypt.hash(Contrasena, 10);
 
     const Usuario1 = await Usuario.findOneAndUpdate({_id:_id }, {
         Documento: Documento ,Nombre: Nombre, Apellido: Apellido, Tipo_Documento: Tipo_Documento, Direccion: Direccion,
-        Telefono: Telefono, Correo: Correo, Contrasena: Contrasena, Rol: Rol, Estado: Estado
+        Telefono: Telefono, Correo: Correo, Contrasena: hashedPassword, Rol: Rol, Estado: Estado
     })
     res.json({
         Usuario1
