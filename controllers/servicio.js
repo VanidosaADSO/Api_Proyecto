@@ -6,19 +6,37 @@ const getservicio = async (req, res) => {
         servicio
     })
 }
-
 const postservicio = async (req, res) => {
+    const { Nombre, Tiempo, Precio, Descripcion, Estado } = req.body;
 
-    const { Nombre, Tiempo, Precio, Descripcion, Imagen, Estado } = req.body
-    console.log(req.body)
-    const servicio1 = new servicios({ Nombre, Tiempo, Precio, Descripcion, Imagen, Estado })
-    await servicio1.save()
+    if (!req.files || !req.files.Imagen) {
+        return res.status(400).json({ message: 'No se ha proporcionado ninguna imagen.' });
+    }
 
-    res.json({
-        servicio1
-    })
+    const uploadedImage = req.files.Imagen;
+    const servicio1 = new servicios({ Nombre, Tiempo, Precio, Descripcion, Estado });
 
-}
+    servicio1.Imagen = uploadedImage.name; 
+    try {
+        await servicio1.save();
+
+        const uploadPath = __dirname + '/uploads/' + uploadedImage.name;
+        uploadedImage.mv(uploadPath, async (err) => {
+            if (err) {
+                return res.status(500).json({ message: 'Error al guardar la imagen.', error: err.message });
+            }
+
+            // Almacenar la URL de la imagen en la base de datos
+            servicio1.Imagen = '/uploads/' + uploadedImage.name;
+            await servicio1.save();
+
+            res.status(201).json({ message: 'Servicio creado exitosamente.', servicio: servicio1 });
+        });
+    } catch (error) {
+        res.status(500).json({ message: 'Error al crear el servicio.', error: error.message });
+    }
+};
+
 
 const putservicio = async (req, res) => {
     const { _id, Nombre, Tiempo, Precio, Descripcion, Imagen, Estado } = req.body
