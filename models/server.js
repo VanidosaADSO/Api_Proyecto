@@ -28,7 +28,7 @@ class Server {
 
     middlewares() {
 
-        app.use(fileUpload({
+        this.app.use(fileUpload({
             useTempFiles: true,
             tempFileDir: '/tmp/'
         }));
