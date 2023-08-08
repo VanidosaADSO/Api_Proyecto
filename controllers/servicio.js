@@ -10,6 +10,7 @@ const getservicio = async (req, res) => {
 const postservicio = async (req, res) => {
 
     const { Nombre, Tiempo, Precio, Descripcion, Imagen, Estado } = req.body
+    console.log(req.body)
     const servicio1 = new servicios({ Nombre, Tiempo, Precio, Descripcion, Imagen, Estado })
     await servicio1.save()
 
