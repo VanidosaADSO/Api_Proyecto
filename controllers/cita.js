@@ -23,15 +23,57 @@ const postcitas = async (req, res) => {
 
 // Actualizar
 const putcitas = async (req, res) => {
-    const { _id, Servicio, FechaCita, HoraCita, Descripcion, Estado } = req.body;
+    try {
+        const { _id, Servicios, FechaCita, HoraCita, Descripcion, Estado } = req.body;
 
-    const Cita1 = await citas.findOneAndUpdate({ _id: _id }, { Servicio: Servicio, FechaCita: FechaCita, HoraCita: HoraCita, Descripcion: Descripcion, Estado: Estado });
-    res.json({
-        msg: "Cita actualizada exitosamente",
-        Cita: Cita1
-    });
+        if (!Array.isArray(Servicios)) {
+            return res.status(400).json({ error: 'El campo Servicios debe ser un array' });
+        }
 
+        const cita = await citas.findOne({ _id: _id });
+
+        if (!cita) {
+            return res.status(404).json({ error: 'Cita no encontrada' });
+        }
+
+        const existingServicios = cita.Servicios || [];
+
+        const updatedServicios = existingServicios.map(existingServicio => {
+            const updatedServicio = Servicios.find(us => us.Nombre === existingServicio.Nombre);
+            if (updatedServicio) {
+                return { ...existingServicio.toObject(), ...updatedServicio };
+            }
+            return existingServicio;
+        });
+
+        // Añadir nuevos servicios por Nombre si no existen en la cita actual
+        Servicios.forEach(newServicio => {
+            if (!existingServicios.some(es => es.Nombre === newServicio.Nombre)) {
+                updatedServicios.push({ Nombre: newServicio.Nombre, eliminar: newServicio.eliminar });
+            }
+        });
+
+        // Filtrar servicios que deben ser eliminados
+        const filteredServicios = updatedServicios.filter(servicio => !servicio.eliminar);
+
+        await citas.findByIdAndUpdate(
+            { _id: _id },
+            { Servicios: filteredServicios, FechaCita, HoraCita, Descripcion, Estado },
+            { new: true }
+        );
+
+        res.json({
+            msg: "Cita actualizada exitosamente"
+        });
+    } catch (error) {
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
 };
+
+
+
+
+
 
 const patchcitas = async (req, res) => {
     const { _id, Estado } = req.body
