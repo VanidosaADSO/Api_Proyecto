@@ -34,6 +34,7 @@ const putcompras = async (req, res) => {
     const { _id, N_factura, M_pago, Fecha, Proveedor, Productos, Estado } = req.body;
 
     if (Productos && Array.isArray(Productos)) {
+
         const compra = await compras.findOne({ _id: _id });
 
         if (!compra) {
@@ -57,6 +58,13 @@ const putcompras = async (req, res) => {
             }
             return existingProducto;
         }).filter(producto => producto !== null); // Filtrar productos marcados para eliminación
+
+        // Agregar nuevos productos en el array de Productos
+        const nuevosProductos = Productos.filter(p => !p._id);
+        nuevosProductos.forEach(nuevoProducto => {
+            updatedProductos.push(nuevoProducto);
+            updatedTotal += nuevoProducto.Cantidad * nuevoProducto.Precio;
+        });
 
         // Realiza la actualización en la base de datos
         const updatedCompra = await compras.findByIdAndUpdate(

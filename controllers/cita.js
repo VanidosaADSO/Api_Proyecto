@@ -23,12 +23,10 @@ const postcitas = async (req, res) => {
 
 // Actualizar
 const putcitas = async (req, res) => {
-    try {
-        const { _id, Servicios, FechaCita, HoraCita, Descripcion, Estado } = req.body;
 
-        if (!Array.isArray(Servicios)) {
-            return res.status(400).json({ error: 'El campo Servicios debe ser un array' });
-        }
+    const { _id, Servicios, FechaCita, HoraCita, Descripcion, Estado } = req.body;
+
+    if (Servicios && Array.isArray(Servicios)) {
 
         const cita = await citas.findOne({ _id: _id });
 
@@ -36,42 +34,39 @@ const putcitas = async (req, res) => {
             return res.status(404).json({ error: 'Cita no encontrada' });
         }
 
-        const existingServicios = cita.Servicios || [];
-
-        const updatedServicios = existingServicios.map(existingServicio => {
-            const updatedServicio = Servicios.find(us => us.Nombre === existingServicio.Nombre);
-            if (updatedServicio) {
-                return { ...existingServicio.toObject(), ...updatedServicio };
+        const updatedServicios = cita.Servicios.map(existingServicio => {
+            const servicioData = Servicios.find(p => p._id && p._id.toString() === existingServicio._id.toString());
+            if (servicioData) {
+                if (servicioData.eliminar) {
+                    return null;
+                }
+                const updatedServicio = { ...existingServicio.toObject(), ...servicioData };
+                return updatedServicio;
             }
             return existingServicio;
-        });
+        }).filter(servicio => servicio !== null)
 
-        // Añadir nuevos servicios por Nombre si no existen en la cita actual
-        Servicios.forEach(newServicio => {
-            if (!existingServicios.some(es => es.Nombre === newServicio.Nombre)) {
-                updatedServicios.push({ Nombre: newServicio.Nombre, eliminar: newServicio.eliminar });
-            }
-        });
+        //Agregar nuevos servicios 
+        const nuevosServicios = Servicios.filter(p => !p._id);
+        nuevosServicios.forEach(nuevoServicio=>{
+            updatedServicios.push(nuevoServicio);
+        })
 
-        // Filtrar servicios que deben ser eliminados
-        const filteredServicios = updatedServicios.filter(servicio => !servicio.eliminar);
-
-        await citas.findByIdAndUpdate(
+        // Realiza la actualización en la base de datos
+        const updatedServicio= await citas.findByIdAndUpdate(
             { _id: _id },
-            { Servicios: filteredServicios, FechaCita, HoraCita, Descripcion, Estado },
+            { Servicios: updatedServicios, FechaCita, HoraCita, Descripcion, Estado },
             { new: true }
         );
 
         res.json({
-            msg: "Cita actualizada exitosamente"
+            msg: "Cita actualizada exitosamente",
+            cita : updatedServicio
         });
-    } catch (error) {
-        res.status(500).json({ error: 'Error interno del servidor' });
+    } else {
+        res.status(400).json({ error: 'La propiedad Productos debe ser un array' });
     }
 };
-
-
-
 
 
 
