@@ -35,13 +35,22 @@ const putUsuario = async (req, res) => {
 }
 
 const patchUsuario = async (req, res) => {
-    const { _id, Estado, Contrasena } = req.body
-    const hashedPassword = await bcrypt.hash(Contrasena, 10);
-    const Usuario1 = await Usuario.findOneAndUpdate({ _id: _id }, { Estado: Estado, Contrasena: hashedPassword })
-    res.json({
-        Usuario1
-    })
-}
+    const { _id, Estado, Contrasena } = req.body;
+
+    // Si se proporciona una nueva contraseña, hasheamos la contraseña y actualizamos
+    if (Contrasena) {
+        const hashedPassword = await bcrypt.hash(Contrasena, 10);
+        await Usuario.findOneAndUpdate(
+            { _id: _id },
+            { Estado: Estado, Contrasena: hashedPassword }
+        );
+    } else {
+        // Si no se proporciona una nueva contraseña, solo actualizamos el estado
+        await Usuario.findOneAndUpdate({ _id: _id }, { Estado: Estado });
+    }
+
+    res.json({ message: 'Actualización realizada' });
+};
 
 const deleteUsuario = async (req, res) => {
     const { _id } = req.query
