@@ -1,7 +1,7 @@
 const servicios = require('../models/servicio');
 const multer = require('multer');
 const express = require('express');
-const app = express();
+
 
 // Configura Multer para manejar la subida de imágenes
 const storage = multer.diskStorage({
@@ -24,6 +24,7 @@ const getservicio = async (req, res) => {
     });
 };
 
+
 const postservicio = async (req, res) => {
     const { Nombre, Tiempo, Precio, Descripcion, Estado } = req.body;
 
@@ -39,16 +40,21 @@ const postservicio = async (req, res) => {
             const imageFilename = req.file ? req.file.filename : null;
             const imageUrl = imageFilename ? `https://api-proyecto-5hms.onrender.com/uploads/${imageFilename}` : null;
 
-            const servicio1 = new servicios({ Nombre, Tiempo, Precio, Descripcion, Imagen: imageUrl, Estado });
-            await servicio1.save();
+            // Crear un objeto del servicio con la información
+            const servicioData = { Nombre, Tiempo, Precio, Descripcion, Imagen: imageUrl, Estado };
 
-            res.json({ servicio1 });
+            // Guardar el servicio en la base de datos
+            const servicio = new servicios(servicioData); // Reemplaza 'Servicio' con el nombre de tu modelo
+            await servicio.save();
+
+            res.json({ servicio });
         });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Hubo un error al guardar el servicio' });
     }
 };
+
 
 const putservicio = async (req, res) => {
     const { _id, Nombre, Tiempo, Precio, Descripcion, Imagen, Estado } = req.body;
