@@ -26,16 +26,18 @@ class Server {
     }
 
     middlewares() {
+
+
+        this.app.use(bodyParser.json())
+        this.app.use(express.static('public'))
+        this.app.use(express.json())
+
         this.app.use(cors({
             origin: '*',
             methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
             preflightContinue: false,
             optionsSuccessStatus: 204
         }))
-
-        this.app.use(bodyParser.json())
-        this.app.use(express.static('public'))
-        this.app.use(express.json())
     }
   
 

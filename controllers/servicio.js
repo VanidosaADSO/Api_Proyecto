@@ -24,9 +24,10 @@ const getservicio = async (req, res) => {
     });
 };
 
-
 const postservicio = async (req, res) => {
     const { Nombre, Tiempo, Precio, Descripcion, Estado } = req.body;
+
+    console.log(req.files)
 
     try {
         // Maneja la subida de la imagen utilizando el middleware de Multer
@@ -36,15 +37,14 @@ const postservicio = async (req, res) => {
                 return res.status(500).json({ error: 'Error al subir la imagen' });
             }
 
-            // Si la subida de la imagen fue exitosa, obtén la información del archivo
-            const imageFilename = req.file ? req.file.filename : null;
-            const imageUrl = imageFilename ? `https://api-proyecto-5hms.onrender.com/uploads/${imageFilename}` : null;
+            // Obtén la ruta de la imagen después de la subida
+            const imagePath = req.files;
 
             // Crear un objeto del servicio con la información
-            const servicioData = { Nombre, Tiempo, Precio, Descripcion, Imagen: imageUrl, Estado };
+            const servicioData = { Nombre, Tiempo, Precio, Descripcion, Imagen: imagePath, Estado };
 
             // Guardar el servicio en la base de datos
-            const servicio = new servicios(servicioData); // Reemplaza 'Servicio' con el nombre de tu modelo
+            const servicio = new servicios(servicioData); // Reemplaza 'servicios' con el nombre de tu modelo
             await servicio.save();
 
             res.json({ servicio });
