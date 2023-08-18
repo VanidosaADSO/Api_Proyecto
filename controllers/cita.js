@@ -12,8 +12,8 @@ const getcitas = async (req, res) => {
 
 
 const postcitas = async (req, res) => {
-    const { Documento, Nombre, Apellidos, Servicios, FechaCita, HoraCita, Descripcion, Estado } = req.body
-    const Cita1 = new citas({ Documento, Nombre, Apellidos, Servicios, FechaCita, HoraCita, Descripcion, Estado })
+    const { Documento, Nombre, Apellidos, Servicios, FechaCita, HoraCita, horaFinCitaDB, Descripcion, Estado } = req.body
+    const Cita1 = new citas({ Documento, Nombre, Apellidos, Servicios, FechaCita, HoraCita, horaFinCitaDB, Descripcion, Estado })
     await Cita1.save();
     res.json({
         Cita1
@@ -48,12 +48,12 @@ const putcitas = async (req, res) => {
 
         //Agregar nuevos servicios 
         const nuevosServicios = Servicios.filter(p => !p._id);
-        nuevosServicios.forEach(nuevoServicio=>{
+        nuevosServicios.forEach(nuevoServicio => {
             updatedServicios.push(nuevoServicio);
         })
 
         // Realiza la actualización en la base de datos
-        const updatedServicio= await citas.findByIdAndUpdate(
+        const updatedServicio = await citas.findByIdAndUpdate(
             { _id: _id },
             { Servicios: updatedServicios, FechaCita, HoraCita, Descripcion, Estado },
             { new: true }
@@ -61,10 +61,10 @@ const putcitas = async (req, res) => {
 
         res.json({
             msg: "Cita actualizada exitosamente",
-            cita : updatedServicio
+            cita: updatedServicio
         });
     } else {
-        res.status(400).json({ error: 'La propiedad Productos debe ser un array' });
+        res.status(400).json({ error: 'La propiedad servicos debe ser un array' });
     }
 };
 

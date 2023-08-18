@@ -15,12 +15,12 @@ const CitaSchema = Schema({
         type: String,
         required: [true, 'EL nombre es un campo obligatorio']
     },
-    Apellidos:{
-        type: String,   
+    Apellidos: {
+        type: String,
         required: [true, 'El apellido es un campo obligatorio']
     },
-    Servicios:{
-        type:[ServicioShema],
+    Servicios: {
+        type: [ServicioShema],
         required: [true, 'Se tiene que agregar un servicio como minimo']
     },
     FechaCita: {
@@ -31,7 +31,14 @@ const CitaSchema = Schema({
         type: String,
         required: [true, 'La horaCita es un campo obligatorio']
     },
-
+    horaInicioCitaDB: {
+        type: Number,
+        required: [true, 'La hora inicio es un campo obligatorio']
+    },
+    horaFinCitaDB: {
+        type: Number,
+        required: [true, 'La hora fin es un campo obligatorio']
+    },
     Descripcion: {
         type: String,
         required: [true, 'La descripcion es un campo obligatorio']

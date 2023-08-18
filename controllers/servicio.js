@@ -25,41 +25,58 @@ const getservicio = async (req, res) => {
 };
 
 const postservicio = async (req, res) => {
-    const { Nombre, Tiempo, Precio, Descripcion, Estado } = req.body;
 
-    console.log(req.files)
+    const { Nombre, Tiempo, Productos, Precio, Descripcion, Imagen, Estado } = req.body
+    const servicio1 = new servicios({ Nombre, Tiempo, Productos, Precio, Descripcion, Imagen, Estado })
+    await servicio1.save()
 
-    try {
-        // Maneja la subida de la imagen utilizando el middleware de Multer
-        upload.single('Imagen')(req, res, async (err) => {
-            if (err) {
-                console.error(err);
-                return res.status(500).json({ error: 'Error al subir la imagen' });
-            }
+    res.json({
+        servicio1
+    })
 
-            // Obtén la ruta de la imagen después de la subida
-            const imagePath = req.files;
-
-            // Crear un objeto del servicio con la información
-            const servicioData = { Nombre, Tiempo, Precio, Descripcion, Imagen: imagePath, Estado };
-
-            // Guardar el servicio en la base de datos
-            const servicio = new servicios(servicioData); // Reemplaza 'servicios' con el nombre de tu modelo
-            await servicio.save();
-
-            res.json({ servicio });
-        });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Hubo un error al guardar el servicio' });
-    }
-};
+}
 
 
 const putservicio = async (req, res) => {
-    const { _id, Nombre, Tiempo, Precio, Descripcion, Imagen, Estado } = req.body;
-    const servicio1 = await servicios.findByIdAndUpdate({ _id: _id }, { Nombre, Tiempo, Precio, Descripcion, Imagen, Estado });
-    res.json({ servicio1 });
+    const { _id, Nombre, Tiempo, Productos, Precio, Descripcion, Imagen, Estado } = req.body;
+
+    if (Productos && Array.isArray(Productos)) {
+        const servicio = await servicios.findOne({ _id: _id });
+
+        if (!servicio) {
+            return res.status(404).json({ error: 'Servicio no encontrado' });
+        }
+
+        const updatedProductos = servicios.Productos.map(existingProducto => {
+            const productoData = servicios.find(p => p._id && p._id.toString() === existingProducto._id.toString());
+            if (productoData) {
+                if (productoData.eliminar) {
+                    return null;
+                }
+                const updatedProducto = { ...existingProducto.toObject(), ...productoData };
+                return updatedProducto;
+            }
+            return existingProducto;
+        }).filter(producto => producto !== null)
+
+        const nuevosProductos = Productos.filter(p => !p._id);
+        nuevosProductos.forEach(nuevoProducto => {
+            updatedProductos.push(nuevoProducto);
+        })
+
+        const updatedProducto = await servicios.findByIdAndUpdate(
+            { _id: _id },
+            { Nombre, Tiempo, Productos: updatedProductos, Precio, Descripcion, Imagen, Estado },
+            { new: true }
+        );
+        res.json({
+            msg: "Servicio actualizada exitosamente",
+            cita: updatedProducto
+        });
+
+    } else {
+        res.status(400).json({ error: 'La propiedad Productos debe ser un array' });
+    }
 };
 
 const patchservicio = async (req, res) => {
