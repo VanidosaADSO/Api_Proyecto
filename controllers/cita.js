@@ -12,8 +12,8 @@ const getcitas = async (req, res) => {
 
 
 const postcitas = async (req, res) => {
-    const { Documento, Nombre, Apellidos, Servicios, FechaCita, HoraCita, horaFinCitaDB, Descripcion, Estado } = req.body
-    const Cita1 = new citas({ Documento, Nombre, Apellidos, Servicios, FechaCita, HoraCita, horaFinCitaDB, Descripcion, Estado })
+    const { Documento, Nombre, Apellidos, Servicios, FechaCita, HoraCita, horaInicioCitaDB, horaFinCitaDB, Descripcion, Estado } = req.body
+    const Cita1 = new citas({ Documento, Nombre, Apellidos, Servicios, FechaCita, HoraCita, horaInicioCitaDB, horaFinCitaDB, Descripcion, Estado })
     await Cita1.save();
     res.json({
         Cita1
@@ -24,7 +24,7 @@ const postcitas = async (req, res) => {
 // Actualizar
 const putcitas = async (req, res) => {
 
-    const { _id, Servicios, FechaCita, HoraCita, Descripcion, Estado } = req.body;
+    const { _id, Servicios, FechaCita, HoraCita, horaInicioCitaDB, horaFinCitaDB, Descripcion, Estado } = req.body;
 
     if (Servicios && Array.isArray(Servicios)) {
 
@@ -55,7 +55,7 @@ const putcitas = async (req, res) => {
         // Realiza la actualización en la base de datos
         const updatedServicio = await citas.findByIdAndUpdate(
             { _id: _id },
-            { Servicios: updatedServicios, FechaCita, HoraCita, Descripcion, Estado },
+            { Servicios: updatedServicios, FechaCita, HoraCita, horaInicioCitaDB, horaFinCitaDB, Descripcion, Estado },
             { new: true }
         );
 
