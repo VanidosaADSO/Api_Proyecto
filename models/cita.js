@@ -43,6 +43,10 @@ const CitaSchema = Schema({
         type: String,
         required: [true, 'La descripcion es un campo obligatorio']
     },
+    ConfirmarCita:{
+        type: Boolean,
+        default: false
+    },
     Estado: {
         type: Boolean,
         default: true

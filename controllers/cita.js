@@ -1,7 +1,4 @@
 const citas = require('../models/cita')
-const moment = require('moment');
-
-
 const getcitas = async (req, res) => {
     const cita = await citas.find()
     res.json({
@@ -12,8 +9,8 @@ const getcitas = async (req, res) => {
 
 
 const postcitas = async (req, res) => {
-    const { Documento, Nombre, Apellidos, Servicios, FechaCita, HoraCita, horaInicioCitaDB, horaFinCitaDB, Descripcion, Estado } = req.body
-    const Cita1 = new citas({ Documento, Nombre, Apellidos, Servicios, FechaCita, HoraCita, horaInicioCitaDB, horaFinCitaDB, Descripcion, Estado })
+    const { Documento, Nombre, Apellidos, Servicios, FechaCita, HoraCita, horaInicioCitaDB, horaFinCitaDB, Descripcion, ConfirmarCita, Estado } = req.body
+    const Cita1 = new citas({ Documento, Nombre, Apellidos, Servicios, FechaCita, HoraCita, horaInicioCitaDB, horaFinCitaDB, Descripcion, ConfirmarCita, Estado })
     await Cita1.save();
     res.json({
         Cita1
@@ -52,7 +49,7 @@ const putcitas = async (req, res) => {
             updatedServicios.push(nuevoServicio);
         })
 
-        // Realiza la actualización en la base de datos
+        // Realiza la actualización en la base de datos        
         const updatedServicio = await citas.findByIdAndUpdate(
             { _id: _id },
             { Servicios: updatedServicios, FechaCita, HoraCita, horaInicioCitaDB, horaFinCitaDB, Descripcion, Estado },
@@ -71,8 +68,8 @@ const putcitas = async (req, res) => {
 
 
 const patchcitas = async (req, res) => {
-    const { _id, Estado } = req.body
-    const Cita1 = await citas.findOneAndUpdate({ _id: _id }, { Estado: Estado })
+    const { _id, ConfirmarCita, Estado } = req.body
+    const Cita1 = await citas.findOneAndUpdate({ _id: _id }, { Estado: Estado, ConfirmarCita: ConfirmarCita })
     res.json({
         Cita1
     })
