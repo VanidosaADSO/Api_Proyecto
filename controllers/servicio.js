@@ -41,14 +41,15 @@ const putservicio = async (req, res) => {
     const { _id, Nombre, Tiempo, Productos, Precio, Descripcion, Imagen, Estado } = req.body;
 
     if (Productos && Array.isArray(Productos)) {
+
         const servicio = await servicios.findOne({ _id: _id });
 
         if (!servicio) {
             return res.status(404).json({ error: 'Servicio no encontrado' });
         }
 
-        const updatedProductos = servicios.Productos.map(existingProducto => {
-            const productoData = servicios.find(p => p._id && p._id.toString() === existingProducto._id.toString());
+        const updatedProductos = servicio.Productos.map(existingProducto => {
+            const productoData = Productos.find(p => p._id && p._id.toString() === existingProducto._id.toString());
             if (productoData) {
                 if (productoData.eliminar) {
                     return null;
@@ -70,7 +71,7 @@ const putservicio = async (req, res) => {
             { new: true }
         );
         res.json({
-            msg: "Servicio actualizada exitosamente",
+            msg: "Servicio actualizado exitosamente",
             cita: updatedProducto
         });
 
