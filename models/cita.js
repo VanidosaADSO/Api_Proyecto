@@ -31,19 +31,15 @@ const CitaSchema = Schema({
         type: String,
         required: [true, 'La horaCita es un campo obligatorio']
     },
-    horaInicioCitaDB: {
+    Fincita: {
         type: String,
         required: [true, 'La hora inicio cita es un campo obligatorio']
-    },
-    horaFinCitaDB: {
-        type: String,
-        required: [true, 'La hora fin cita es un campo obligatorio']
     },
     Descripcion: {
         type: String,
         required: [true, 'La descripcion es un campo obligatorio']
     },
-    ConfirmarCita:{
+    ConfirmarCita: {
         type: Boolean,
         default: false
     },
