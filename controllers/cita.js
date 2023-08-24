@@ -1,6 +1,7 @@
 const citas = require('../models/cita')
 const usuario = require('../models/usuario')
 const insumos = require('../models/insumo')
+const servicios = require('../models/servicio');
 
 const nodemailer = require('nodemailer');
 const getcitas = async (req, res) => {
@@ -141,7 +142,6 @@ const putcitas = async (req, res) => {
 };
 
 
-
 const patchcitas = async (req, res) => {
     try {
         const { _id, ConfirmarCita, Estado } = req.body;
@@ -158,17 +158,35 @@ const patchcitas = async (req, res) => {
         citaToUpdate.ConfirmarCita = ConfirmarCita;
         await citaToUpdate.save();
 
+        // Obtener los nombres de los servicios de la cita
+        const serviciosCita = citaToUpdate.Servicios;
+
         // Obtener los productos necesarios de la colección de servicios
-        const productosNecesarios = citaToUpdate.Productos;
+        const productosNecesarios = [];
+
+        for (const servicio of serviciosCita) {
+            const { Nombre } = servicio;
+            const servicioEncontrado = await servicios.findOne({ Nombre: Nombre });
+
+            if (!servicioEncontrado) {
+                console.log(`Servicio no encontrado: ${Nombre}`);
+                continue;
+            }
+
+            productosNecesarios.push(...servicioEncontrado.Productos);
+        }
 
         // Actualizar la colección de insumos restando las cantidades
         for (const producto of productosNecesarios) {
             const insumo = await insumos.findOne({ Nombre: producto.Nombre });
 
-            if (insumo) {
-                insumo.cantidad -= producto.Cantidad;
-                await insumo.save();
+            if (!insumo) {
+                console.log(`Insumo no encontrado: ${producto.Nombre}`);
+                continue;
             }
+
+            insumo.Cantidad -= producto.Cantidad;
+            await insumo.save();
         }
 
         res.json({
@@ -179,6 +197,8 @@ const patchcitas = async (req, res) => {
         res.status(500).json({ error: 'Error en el servidor' });
     }
 };
+
+
 
 // Eliminar
 const deletecitas = async (req, res) => {
