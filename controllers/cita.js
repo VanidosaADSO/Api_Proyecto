@@ -1,5 +1,7 @@
 const citas = require('../models/cita')
 const usuario = require('../models/usuario')
+const insumos = require('../models/insumo')
+
 const nodemailer = require('nodemailer');
 const getcitas = async (req, res) => {
     const cita = await citas.find()
@@ -58,12 +60,16 @@ const postcitas = async (req, res) => {
                 <p style="font-size: 14px; color: #ffffff;">Fecha: ${fechaFormateada}<br>
                 Hora: ${HoraCita}<br></p>
                 
-                <h4>Servicios reservados:</h4>
+                <h4 style="color: #ffffff;">Servicios reservados:</h4>
                 <ul style="font-size: 14px; color: #ffffff;">
                     ${Servicios.map(servicio => `<li>${servicio.Nombre}</li>`).join('')}
                 </ul>
+                <br>
+                <h4 style="color: #ffffff;">Si no puedes asistir es importante tener en cuenta la siguiente información:</h4>
+                <p>1. Para cancelar tu cita debe de ser mínimo tres (3) horas antes de la hora de tu servicio.<br>
+                2. Debe comunicarse al siguiente número telefónico: +573136871870.<br>
+                3. Si no asistes a tu cita tendrás una sanción de dos (2) semanas sin poder tomar ningún servicio.</p><br>
                 <center>
-                <p>Si no puedes asistir es importante que importante qeu nos avises,</p>
                 <p style="font-size: 14px; color: #ffffff;">Saludos, Vanidosa Spa <br>
                 Calle101 #18-80 Barrio Varenillo Turbo Antioquia <br>
                 +573136871870
@@ -137,12 +143,42 @@ const putcitas = async (req, res) => {
 
 
 const patchcitas = async (req, res) => {
-    const { _id, ConfirmarCita, Estado } = req.body
-    const Cita1 = await citas.findOneAndUpdate({ _id: _id }, { Estado: Estado, ConfirmarCita: ConfirmarCita })
-    res.json({
-        Cita1
-    })
-}
+    try {
+        const { _id, ConfirmarCita, Estado } = req.body;
+
+        // Encontrar la cita a actualizar
+        const citaToUpdate = await citas.findOne({ _id: _id });
+
+        if (!citaToUpdate) {
+            return res.status(404).json({ error: 'Cita no encontrada' });
+        }
+
+        // Actualizar la cita
+        citaToUpdate.Estado = Estado;
+        citaToUpdate.ConfirmarCita = ConfirmarCita;
+        await citaToUpdate.save();
+
+        // Obtener los productos necesarios de la colección de servicios
+        const productosNecesarios = citaToUpdate.Productos;
+
+        // Actualizar la colección de insumos restando las cantidades
+        for (const producto of productosNecesarios) {
+            const insumo = await insumos.findOne({ Nombre: producto.Nombre });
+
+            if (insumo) {
+                insumo.cantidad -= producto.Cantidad;
+                await insumo.save();
+            }
+        }
+
+        res.json({
+            message: 'Cita actualizada y productos descontados exitosamente'
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error en el servidor' });
+    }
+};
 
 // Eliminar
 const deletecitas = async (req, res) => {
