@@ -10,9 +10,9 @@ const getUsuario = async (req, res) => {
 }
 
 const postUsuario = async (req, res) => {
-    const { Nombre, Apellido, Tipo_Documento, Documento, Direccion, Telefono, Correo, Contrasena, Rol, Estado } = req.body
+    const { Nombre, Apellido, Tipo_Documento, Documento, Direccion, Telefono, Correo, Contrasena, Rol, dispoEmpleado, Estado } = req.body
 
-    const Usuario1 = new Usuario({ Nombre, Apellido, Tipo_Documento, Documento, Direccion, Telefono, Correo, Contrasena, Rol, Estado })
+    const Usuario1 = new Usuario({ Nombre, Apellido, Tipo_Documento, Documento, Direccion, Telefono, Correo, Contrasena, Rol, dispoEmpleado, Estado })
 
     Usuario1.Contrasena = bcrypt.hashSync(Contrasena, 10)
     await Usuario1.save()
@@ -35,18 +35,18 @@ const putUsuario = async (req, res) => {
 }
 
 const patchUsuario = async (req, res) => {
-    const { _id, Estado, Contrasena } = req.body;
+    const { _id, Estado, dispoEmpleado, Contrasena } = req.body;
 
     // Si se proporciona una nueva contraseña, hasheamos la contraseña y actualizamos
     if (Contrasena) {
         const hashedPassword = await bcrypt.hash(Contrasena, 10);
         await Usuario.findOneAndUpdate(
             { _id: _id },
-            { Estado: Estado, Contrasena: hashedPassword }
+            { Estado: Estado, dispoEmpleado: dispoEmpleado, Contrasena: hashedPassword }
         );
     } else {
         // Si no se proporciona una nueva contraseña, solo actualizamos el estado
-        await Usuario.findOneAndUpdate({ _id: _id }, { Estado: Estado });
+        await Usuario.findOneAndUpdate({ _id: _id }, { Estado: Estado, dispoEmpleado: dispoEmpleado });
     }
 
     res.json({ message: 'Actualización realizada' });

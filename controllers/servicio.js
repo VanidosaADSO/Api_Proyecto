@@ -1,20 +1,5 @@
 const servicios = require('../models/servicio');
-const multer = require('multer');
-const express = require('express');
-
-
-// Configura Multer para manejar la subida de imágenes
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads/'); // Carpeta donde se guardarán las imágenes
-    },
-    filename: (req, file, cb) => {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, uniqueSuffix + '-' + file.originalname);
-    },
-});
-
-const upload = multer({ storage: storage });
+// const multer = require('../utils/multerConfig');
 
 const getservicio = async (req, res) => {
     const servicio = await servicios.find();

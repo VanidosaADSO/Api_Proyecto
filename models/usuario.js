@@ -9,7 +9,6 @@ const UsuarioSchema = Schema({
     Apellido: {
         type: String,
         required: [true, 'El apellido es un campo obligatorio']
-
     },
     Tipo_Documento: {
         type: String,
@@ -48,6 +47,10 @@ const UsuarioSchema = Schema({
 
     },
     Estado: {
+        type: Boolean,
+        default: true
+    },
+    dispoEmpleado: {
         type: Boolean,
         default: true
     },
