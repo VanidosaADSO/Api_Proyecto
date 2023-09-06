@@ -97,6 +97,6 @@ module.exports = {
     postservicio,
     putservicio,
     patchservicio,
-    deleteservicio,
-    fileUpload
+    deleteservicio
+    // fileUpload
 }
