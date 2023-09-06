@@ -1,5 +1,20 @@
+const multer = require('multer');
 const servicios = require('../models/servicio');
+const uploadMulterConfig = require('../utils/multerConfig');
 // const multer = require('../utils/multerConfig');
+//  const upload = multer(uploadMulterConfig).array('Imagenes', 5);
+
+// const fileUpload = (req, res, next)=>{
+//     upload(req, res, function(error){
+//         if(error){
+//             res.json({
+//                 "error":500
+//             })
+//         }
+//     })
+// }
+
+
 
 const getservicio = async (req, res) => {
     const servicio = await servicios.find();
@@ -83,4 +98,5 @@ module.exports = {
     putservicio,
     patchservicio,
     deleteservicio,
+    fileUpload
 }

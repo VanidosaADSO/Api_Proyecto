@@ -23,7 +23,7 @@ const ServicioSchema = Schema({
     },
     Productos: {
         type: [ProductoShema],
-        required: [true, 'Tiene que aver al menos un producto']
+        required: [true, 'Tiene que haber al menos un producto']
     },
     Precio: {
         type: Number,

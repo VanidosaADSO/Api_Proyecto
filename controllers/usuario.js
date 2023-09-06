@@ -10,10 +10,12 @@ const getUsuario = async (req, res) => {
 }
 
 const postUsuario = async (req, res) => {
-    const { Nombre, Apellido, Tipo_Documento, Documento, Direccion, Telefono, Correo, Contrasena, Rol, dispoEmpleado, Estado } = req.body
+    const { Nombre, Apellido, Tipo_Documento, Documento, Direccion, Telefono, Correo, Contrasena, Rol,Estado } = req.body
 
-    const Usuario1 = new Usuario({ Nombre, Apellido, Tipo_Documento, Documento, Direccion, Telefono, Correo, Contrasena, Rol, dispoEmpleado, Estado })
-
+    const Usuario1 = new Usuario({ Nombre, Apellido, Tipo_Documento, Documento, Direccion, Telefono, Correo, Contrasena, Rol,Estado })
+    if(Rol === 'Empleado'){
+        Usuario1.dispoEmpleado = true
+    }
     Usuario1.Contrasena = bcrypt.hashSync(Contrasena, 10)
     await Usuario1.save()
 

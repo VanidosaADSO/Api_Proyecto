@@ -40,21 +40,54 @@ const postOlvidocontrasena = async (req, res) => {
                 }
             ],
             html: `
-                <div style="background-color: #273746; padding: 20px; text-align: center; color: #ffffff; margin-left: 200px; margin-right: 200px; border-radius: 10px ">
-                    <img src="cid:logo@unique_cid" alt="Logo Vanidosa SPA" style="display: block; width: 150px; margin: 0 auto;">
-                    <h2>Hola, ${Correo}:</h2>
-                    <p style="font-size: 16px; color: #ffffff;">Haz clic en el siguiente enlace para restablecer tu contraseña:</p>
-                    <a id="resetLink" href="${resetLink}" style="display: block; width: 200px; background-color: #007bff; color: #fff; text-align: center; padding: 10px; text-decoration: none; margin: 10px auto;">Restablecer Contraseña</a>
-
-                    <p style="color: #ffffff;" >Si no estás tratando de recuperar tus credenciales de inicio de sesión en Vanidosa Spa,
-                    por favor, ignora este correo electrónico. Es posible que otro usuario
-                    haya introducido su información de inicio de sesión de manera incorrecta.</p>
-
-                    <p style="font-size: 14px; color: #ffffff;">Saludos, Vanidosa Spa <br>
-                    Calle101 #18-80 Barrio Varenillo Turbo Antioquia <br>
-                    +573136871870
-                    </p>
-                </div>
+            <div style="
+            background-color: #273746; 
+            width: 86%;
+            margin: auto;
+            padding: 20px; 
+            text-align: center; 
+            color: #ffffff;  
+            border-radius: 10px ">
+        
+            <img src="cid:logo@unique_cid" alt="Logo Vanidosa SPA" style="
+              display: block; 
+              width: 150px; 
+              margin: 0 auto;">
+        
+            <h2>Hola, ${Correo}:</h2>
+        
+            <p style="
+              font-size: 16px; 
+              color: #ffffff;">
+              Haz clic en el siguiente enlace para restablecer tu contraseña:
+            </p>
+        
+            <a id="resetLink" href="${resetLink}" style="
+                background-color: #007bff; 
+                color: #ffffff; 
+                text-align: center; 
+                padding: 10px 15px; 
+                text-decoration: none; 
+                margin: 10px auto;">
+                Restablecer Contraseña
+            </a>
+        
+            <p style="
+              color: #ffffff;">
+              Si no estás tratando de recuperar tus credenciales de inicio de sesión en Vanidosa Spa,
+              por favor, ignora este correo electrónico. Es posible que otro usuario
+              haya introducido su información de inicio de sesión de manera incorrecta.
+            </p>
+        
+            <p style="
+              font-size: 14px; 
+              color: #ffffff;">
+              Saludos, Vanidosa Spa<br>
+              Calle101 #18-80 Barrio Varenillo Turbo Antioquia<br>
+              +573136871870
+            </p>
+        
+          </div>
             `,
         };
 

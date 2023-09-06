@@ -3,11 +3,13 @@ const router = Router();
 const { check } = require('express-validator');
 const { validarCampos } = require('../middlewares/validar-campos');
 const { postservicio, getservicio, putservicio, patchservicio, deleteservicio } = require('../controllers/servicio');
+const fileUpload = require('express-fileupload');
 // const multer = require('./multerConfig');
 
 // Ruta para crear un nuevo servicio
 router.post(
   '/',
+  // fileUpload,
   [
       check('Nombre', 'El nombre es obligatorio').not().isEmpty(),
       check('Tiempo', 'El tiempo es obligatorio').not().isEmpty(),

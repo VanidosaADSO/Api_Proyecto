@@ -51,8 +51,7 @@ const UsuarioSchema = Schema({
         default: true
     },
     dispoEmpleado: {
-        type: Boolean,
-        default: true
+        type: Boolean
     },
     token: {
         type: String
