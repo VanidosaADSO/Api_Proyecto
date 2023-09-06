@@ -1,4 +1,5 @@
 const multer = require('multer');
+const path = require('path');
 
 // Configura Multer para manejar la subida de imágenes
 const storage = multer.diskStorage({
@@ -11,6 +12,6 @@ const storage = multer.diskStorage({
     },
 });
 
-const upload = multer({ storage: storage });
+const uploadMulterConfig = multer({ storage: storage });
 
-module.exports = upload;
+module.exports = uploadMulterConfig;

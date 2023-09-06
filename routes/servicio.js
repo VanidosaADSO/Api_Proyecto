@@ -3,20 +3,19 @@ const router = Router();
 const { check } = require('express-validator');
 const { validarCampos } = require('../middlewares/validar-campos');
 const { postservicio, getservicio, putservicio, patchservicio, deleteservicio } = require('../controllers/servicio');
-// const fileUpload = require('express-fileupload');
-// const multer = require('./multerConfig');
+const uploadMulterConfig = require('../utils/multerConfig'); // Importa la configuración de Multer
 
 // Ruta para crear un nuevo servicio
-router.post(
-  '/',
-  // fileUpload,
+router.post('/',
   [
-      check('Nombre', 'El nombre es obligatorio').not().isEmpty(),
-      check('Tiempo', 'El tiempo es obligatorio').not().isEmpty(),
-      check('Precio', 'El precio es obligatorio').not().isEmpty(),
-      check('Descripcion', 'La descripcion es obligatoria').not().isEmpty(),
-      validarCampos,
+      // Validaciones para los campos del servicio
+      // check('Nombre', 'El nombre es obligatorio').not().isEmpty(),
+      // check('Tiempo', 'El tiempo es obligatorio').not().isEmpty(),
+      // check('Precio', 'El precio es obligatorio').not().isEmpty(),
+      // check('Descripcion', 'La descripción es obligatoria').not().isEmpty(),
+      // validarCampos,
   ],
+  uploadMulterConfig.array('Imagen', 5), // Agrega la configuración de Multer para manejar las imágenes
   postservicio
 );
 

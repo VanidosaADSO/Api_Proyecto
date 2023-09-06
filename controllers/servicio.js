@@ -1,20 +1,17 @@
 const multer = require('multer');
 const servicios = require('../models/servicio');
 const uploadMulterConfig = require('../utils/multerConfig');
-// const multer = require('../utils/multerConfig');
-//  const upload = multer(uploadMulterConfig).array('Imagenes', 5);
+ const upload = multer(uploadMulterConfig).array('Imagen', 5);
 
-// const fileUpload = (req, res, next)=>{
-//     upload(req, res, function(error){
-//         if(error){
-//             res.json({
-//                 "error":500
-//             })
-//         }
-//     })
-// }
-
-
+const fileUpload = (req, res, next)=>{
+    upload(req, res, function(error){
+        if(error){
+            res.json({
+                "error":500
+            })
+        }
+    })
+}
 
 const getservicio = async (req, res) => {
     const servicio = await servicios.find();
@@ -25,16 +22,40 @@ const getservicio = async (req, res) => {
 };
 
 const postservicio = async (req, res) => {
+    // Aquí puedes acceder a los archivos subidos con req.files
+    const { Nombre, Tiempo, Productos, Precio, Descripcion, Estado } = req.body;
 
-    const { Nombre, Tiempo, Productos, Precio, Descripcion, Imagen, Estado } = req.body
-    const servicio1 = new servicios({ Nombre, Tiempo, Productos, Precio, Descripcion, Imagen, Estado })
-    await servicio1.save()
+    // Asegúrate de que req.files esté disponible si deseas acceder a las imágenes
+    if (!req.files || req.files.length === 0) {
+        return res.status(400).json({ error: 'No se proporcionaron imágenes.' });
+    }
 
-    res.json({
-        servicio1
-    })
+    // Procesa las imágenes subidas, por ejemplo, guarda sus rutas en una base de datos
+    const imagenes = req.files.map((file) => {
+        return file.path; // Esto asume que Multer ha guardado las imágenes en el sistema de archivos
+    });
 
-}
+    const servicio1 = new servicios({
+        Nombre,
+        Tiempo,
+        Productos,
+        Precio,
+        Descripcion,
+        Estado,
+        Imagen: imagenes, // Agrega las rutas de las imágenes a tu modelo de servicio
+    });
+
+    try {
+        await servicio1.save();
+
+        res.status(201).json({
+            servicio1,
+        });
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ error: 'Error al guardar el servicio.' });
+    }
+};
 
 
 const putservicio = async (req, res) => {
@@ -97,6 +118,6 @@ module.exports = {
     postservicio,
     putservicio,
     patchservicio,
-    deleteservicio
-    // fileUpload
+    deleteservicio,
+    fileUpload
 }
