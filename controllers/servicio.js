@@ -37,7 +37,8 @@ const postservicio = async (req, res) => {
 
     // Procesa las imágenes subidas, genera la URL y guárdala en la base de datos
     const imagenes = req.files.map((file) => {
-        const imageUrl = `${req.protocol}://${req.get('host')}/uploads/${file.filename}`; // Genera la URL de la imagen
+        //const imageUrl = `${req.protocol}://${req.get('host')}/uploads/${file.filename}`; // Genera la URL de la imagen
+        const imageUrl = `${file.filename}`; // Genera la URL de la imagen
         return imageUrl;
     });
 
