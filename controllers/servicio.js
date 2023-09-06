@@ -1,7 +1,8 @@
 const multer = require('multer');
 const servicios = require('../models/servicio');
 const uploadMulterConfig = require('../utils/multerConfig');
- const upload = multer(uploadMulterConfig).array('Imagen', 5);
+const upload = multer(uploadMulterConfig).array('Imagen', 5);
+const { validationResult } = require('express-validator');
 
 const fileUpload = (req, res, next)=>{
     upload(req, res, function(error){
@@ -12,7 +13,6 @@ const fileUpload = (req, res, next)=>{
         }
     })
 }
-
 const getservicio = async (req, res) => {
     const servicio = await servicios.find();
 
@@ -22,7 +22,12 @@ const getservicio = async (req, res) => {
 };
 
 const postservicio = async (req, res) => {
-    // Aquí puedes acceder a los archivos subidos con req.files
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
     const { Nombre, Tiempo, Productos, Precio, Descripcion, Estado } = req.body;
 
     // Asegúrate de que req.files esté disponible si deseas acceder a las imágenes
@@ -30,9 +35,10 @@ const postservicio = async (req, res) => {
         return res.status(400).json({ error: 'No se proporcionaron imágenes.' });
     }
 
-    // Procesa las imágenes subidas, por ejemplo, guarda sus rutas en una base de datos
+    // Procesa las imágenes subidas, genera la URL y guárdala en la base de datos
     const imagenes = req.files.map((file) => {
-        return file.path; // Esto asume que Multer ha guardado las imágenes en el sistema de archivos
+        const imageUrl = `${req.protocol}://${req.get('host')}/uploads/${file.filename}`; // Genera la URL de la imagen
+        return imageUrl;
     });
 
     const servicio1 = new servicios({
@@ -42,7 +48,7 @@ const postservicio = async (req, res) => {
         Precio,
         Descripcion,
         Estado,
-        Imagen: imagenes, // Agrega las rutas de las imágenes a tu modelo de servicio
+        Imagen: imagenes[0], 
     });
 
     try {
@@ -52,12 +58,10 @@ const postservicio = async (req, res) => {
             servicio1,
         });
     } catch (error) {
-        console.log(error)
+        console.log(error);
         res.status(500).json({ error: 'Error al guardar el servicio.' });
     }
 };
-
-
 const putservicio = async (req, res) => {
     const { _id, Nombre, Tiempo, Productos, Precio, Descripcion, Imagen, Estado } = req.body;
 
