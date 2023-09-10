@@ -63,6 +63,7 @@ const postservicio = async (req, res) => {
         res.status(500).json({ error: 'Error al guardar el servicio.' });
     }
 };
+
 const putservicio = async (req, res) => {
     const { _id, Nombre, Tiempo, Productos, Precio, Descripcion, Imagen, Estado } = req.body;
 

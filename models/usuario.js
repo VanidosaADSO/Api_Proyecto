@@ -50,9 +50,6 @@ const UsuarioSchema = Schema({
         type: Boolean,
         default: true
     },
-    dispoEmpleado: {
-        type: Boolean
-    },
     token: {
         type: String
     }
