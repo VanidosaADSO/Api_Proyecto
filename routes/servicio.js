@@ -9,13 +9,13 @@ const uploadMulterConfig = require('../utils/multerConfig'); // Importa la confi
 router.post('/',
   [
       // Validaciones para los campos del servicio
-      // check('Nombre', 'El nombre es obligatorio').not().isEmpty(),
-      // check('Tiempo', 'El tiempo es obligatorio').not().isEmpty(),
-      // check('Precio', 'El precio es obligatorio').not().isEmpty(),
-      // check('Descripcion', 'La descripción es obligatoria').not().isEmpty(),
+      check('Nombre', 'El nombre es obligatorio').not().isEmpty(),
+      check('Tiempo', 'El tiempo es obligatorio').not().isEmpty(),
+      check('Precio', 'El precio es obligatorio').not().isEmpty(),
+      check('Descripcion', 'La descripción es obligatoria').not().isEmpty(),
       // validarCampos,
   ],
-  uploadMulterConfig.array('Imagen', 5), // Agrega la configuración de Multer para manejar las imágenes
+  // uploadMulterConfig.array('Imagen', 5), // Agrega la configuración de Multer para manejar las imágenes
   postservicio
 );
 

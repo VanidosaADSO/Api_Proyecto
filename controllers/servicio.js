@@ -4,15 +4,15 @@ const uploadMulterConfig = require('../utils/multerConfig');
 const upload = multer(uploadMulterConfig).array('Imagen', 5);
 const { validationResult } = require('express-validator');
 
-const fileUpload = (req, res, next)=>{
-    upload(req, res, function(error){
-        if(error){
-            res.json({
-                "error":500
-            })
-        }
-    })
-}
+// const fileUpload = (req, res, next)=>{
+//     upload(req, res, function(error){
+//         if(error){
+//             res.json({
+//                 "error":500
+//             })
+//         }
+//     })
+// }
 const getservicio = async (req, res) => {
     const servicio = await servicios.find();
 
@@ -22,25 +22,25 @@ const getservicio = async (req, res) => {
 };
 
 const postservicio = async (req, res) => {
-    const errors = validationResult(req);
+    // const errors = validationResult(req);
 
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-    }
+    // if (!errors.isEmpty()) {
+    //     return res.status(400).json({ errors: errors.array() });
+    // }
 
     const { Nombre, Tiempo, Productos, Precio, Descripcion, Estado } = req.body;
 
-    // Asegúrate de que req.files esté disponible si deseas acceder a las imágenes
-    if (!req.files || req.files.length === 0) {
-        return res.status(400).json({ error: 'No se proporcionaron imágenes.' });
-    }
+    // // Asegúrate de que req.files esté disponible si deseas acceder a las imágenes
+    // if (!req.files || req.files.length === 0) {
+    //     return res.status(400).json({ error: 'No se proporcionaron imágenes.' });
+    // }
 
-    // Procesa las imágenes subidas, genera la URL y guárdala en la base de datos
-    const imagenes = req.files.map((file) => {
-        //const imageUrl = `${req.protocol}://${req.get('host')}/uploads/${file.filename}`; // Genera la URL de la imagen
-        const imageUrl = `${file.filename}`; // Genera la URL de la imagen
-        return imageUrl;
-    });
+    // // Procesa las imágenes subidas, genera la URL y guárdala en la base de datos
+    // const imagenes = req.files.map((file) => {
+    //     //const imageUrl = `${req.protocol}://${req.get('host')}/uploads/${file.filename}`; // Genera la URL de la imagen
+    //     const imageUrl = `${file.filename}`; // Genera la URL de la imagen
+    //     return imageUrl;
+    // });
 
     const servicio1 = new servicios({
         Nombre,
@@ -48,8 +48,8 @@ const postservicio = async (req, res) => {
         Productos,
         Precio,
         Descripcion,
-        Estado,
-        Imagen: imagenes[0], 
+        Estado
+        // Imagen: imagenes[0], 
     });
 
     try {
@@ -124,6 +124,6 @@ module.exports = {
     postservicio,
     putservicio,
     patchservicio,
-    deleteservicio,
-    fileUpload
+    deleteservicio
+    // fileUpload
 }
