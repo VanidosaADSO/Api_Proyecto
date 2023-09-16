@@ -45,7 +45,7 @@ const patchUsuario = async (req, res) => {
         );
     } else {
         // Si no se proporciona una nueva contraseña, solo actualizamos el estado
-        await Usuario.findOneAndUpdate({ _id: _id }, { Estado: Estado, dispoEmpleado: dispoEmpleado });
+        await Usuario.findOneAndUpdate({ _id: _id }, { Estado: Estado});
     }
 
     res.json({ message: 'Actualización realizada' });

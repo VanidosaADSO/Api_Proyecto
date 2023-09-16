@@ -9,7 +9,7 @@ const insumosSchema=Schema({
     },
     Cantidad:{
         type: Number,
-        required:[true, 'La cantidad es un campo obligatorio']
+        default:0,
     },
     Unidad_Medida:{
         type:  String,

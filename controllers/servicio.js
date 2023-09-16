@@ -1,18 +1,19 @@
-const multer = require('multer');
 const servicios = require('../models/servicio');
-const uploadMulterConfig = require('../utils/multerConfig');
-const upload = multer(uploadMulterConfig).array('Imagen', 5);
-const { validationResult } = require('express-validator');
+const path = require('path');
+const fs = require('fs');
+const util = require('util');
+const { v4: uuidv4 } = require('uuid');
 
-// const fileUpload = (req, res, next)=>{
-//     upload(req, res, function(error){
-//         if(error){
-//             res.json({
-//                 "error":500
-//             })
-//         }
-//     })
-// }
+
+const fileUpload = (req, res, next)=>{
+    upload(req, res, function(error){
+        if(error){
+            res.json({
+                "error":500
+            })
+        }
+    })
+}
 const getservicio = async (req, res) => {
     const servicio = await servicios.find();
 
@@ -21,46 +22,70 @@ const getservicio = async (req, res) => {
     });
 };
 
-const postservicio = async (req, res) => {
-    // const errors = validationResult(req);
+const obtenerImagen = (req, res) => {
+    const id = req.params.id;
 
-    // if (!errors.isEmpty()) {
-    //     return res.status(400).json({ errors: errors.array() });
-    // }
+    Producto.findById(id)
+        .then((result) => {
 
-    const { Nombre, Tiempo, Productos, Precio, Descripcion, Estado } = req.body;
+            if (result.imagen) {
 
-    // // Asegúrate de que req.files esté disponible si deseas acceder a las imágenes
-    // if (!req.files || req.files.length === 0) {
-    //     return res.status(400).json({ error: 'No se proporcionaron imágenes.' });
-    // }
+                const pathImagen = path.join(__dirname, '../uploads', result.imagen)
 
-    // // Procesa las imágenes subidas, genera la URL y guárdala en la base de datos
-    // const imagenes = req.files.map((file) => {
-    //     //const imageUrl = `${req.protocol}://${req.get('host')}/uploads/${file.filename}`; // Genera la URL de la imagen
-    //     const imageUrl = `${file.filename}`; // Genera la URL de la imagen
-    //     return imageUrl;
-    // });
+                if (fs.existsSync(pathImagen)) {
+                    return res.sendFile(pathImagen)
+                }
+            }
 
-    const servicio1 = new servicios({
-        Nombre,
-        Tiempo,
-        Productos,
-        Precio,
-        Descripcion,
-        Estado
-        // Imagen: imagenes[0], 
-    });
-
-    try {
-        await servicio1.save();
-
-        res.status(201).json({
-            servicio1,
+            const pathImagen = path.join(__dirname, '../uploadsno_image_available.png')
+            res.sendFile(pathImagen)
+        })
+        .catch((error) => {
+            console.error(error);
+            res.status(500).json({ error: 'Error al obtener los datos del producto' });
         });
+};
+
+const postservicio = async (req, res) => {
+    try {
+        if (!req.files || !req.files.imagen) {
+            return res.status(400).json({ msg: 'No se proporcionó una imagen válida.' });
+        }
+
+        const { imagen } = req.files;
+        const nombreCortado = imagen.name.split('.');
+        const extension = nombreCortado[nombreCortado.length - 1];
+
+        const extensionesValidas = ['png', 'jpg', 'jpeg'];
+        if (!extensionesValidas.includes(extension)) {
+            return res.status(400).json({ msg: `La extensión ${extension} no es permitida, extensiones válidas ${extensionesValidas}` });
+        }
+
+        const nombreFinal = uuidv4() + '.' + extension;
+        const uploadPath = path.join(__dirname, '../uploads', nombreFinal);
+
+        // Utiliza promisify para convertir imagen.mv en una función basada en promesas
+        const mvPromise = util.promisify(imagen.mv);
+
+        await mvPromise(uploadPath); // Espera a que se complete la operación de mover la imagen
+
+        // Ahora puedes guardar la información del producto en la base de datos
+        const { Nombre, Tiempo, Productos, Precio, Descripcion, Estado } = req.body;
+        const servicio1 = new servicios({
+            Nombre,
+            Tiempo,
+            Productos,
+            Precio,
+            Descripcion,
+            Estado,
+            imagen: nombreFinal, // Guarda el nombre del archivo en la base de datos
+        });
+        await servicio1.save()
+
+        res.status(201).json({ servicio1: servicio1 });
     } catch (error) {
-        console.log(error);
-        res.status(500).json({ error: 'Error al guardar el servicio.' });
+        console.error(error);
+        res.status(500).json({ error: 'Error inesperado.' });
     }
 };
 
@@ -121,9 +146,10 @@ const deleteservicio = async (req, res) => {
 
 module.exports = {
     getservicio,
+    obtenerImagen,
     postservicio,
     putservicio,
     patchservicio,
-    deleteservicio
-    // fileUpload
+    deleteservicio,
+    fileUpload
 }

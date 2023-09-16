@@ -33,10 +33,10 @@ const ServicioSchema = Schema({
         type: String,
         required: [true, 'La descripcion es un campo obligatorio']
     },
-    // Imagen: {
-    //     type: String,
-    //     required: [true, 'La imagen es un campo obligatorio']
-    // },
+    imagen: {
+        type: String,
+        required: [true, 'La imagen es un campo obligatorio']
+    },
     Estado: {
         type: Boolean,
         default: true
