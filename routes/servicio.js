@@ -19,7 +19,7 @@ router.post('/',
 
 router.get('/', getservicio);
 
-router.get('/obtenerImagen', obtenerImagen);
+router.get('/obtenerImagen/:id', obtenerImagen);
 
 router.put('/', putservicio);
 

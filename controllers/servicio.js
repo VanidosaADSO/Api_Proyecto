@@ -24,10 +24,8 @@ const getservicio = async (req, res) => {
 
 const obtenerImagen = (req, res) => {
     const id = req.params.id;
-
-    Producto.findById(id)
+    servicios.findById(id)
         .then((result) => {
-
             if (result.imagen) {
 
                 const pathImagen = path.join(__dirname, '../uploads', result.imagen)
@@ -37,7 +35,7 @@ const obtenerImagen = (req, res) => {
                 }
             }
 
-            const pathImagen = path.join(__dirname, '../uploadsno_image_available.png')
+            const pathImagen = path.join(__dirname, '../uploads/no_image_available.png')
             res.sendFile(pathImagen)
         })
         .catch((error) => {
