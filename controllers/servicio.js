@@ -5,11 +5,11 @@ const util = require('util');
 const { v4: uuidv4 } = require('uuid');
 
 
-const fileUpload = (req, res, next)=>{
-    upload(req, res, function(error){
-        if(error){
+const fileUpload = (req, res, next) => {
+    upload(req, res, function (error) {
+        if (error) {
             res.json({
-                "error":500
+                "error": 500
             })
         }
     })
@@ -88,11 +88,47 @@ const postservicio = async (req, res) => {
 };
 
 const putservicio = async (req, res) => {
-    const { _id, Nombre, Tiempo, Productos, Precio, Descripcion, Imagen, Estado } = req.body;
+    const { _id, Nombre, Tiempo, Productos, Precio, Descripcion, Estado } = req.body;
 
+    const servicio = await servicios.findOne({ _id: _id });
+
+    // Editar imagen 
+    if (!req.files || Object.keys(req.files).length === 0 || !req.files.imagen) {
+        res.status(400).json({ msg: 'No hay archivos que subir' });
+        return;
+    }
+
+    try {
+        if (servicio.imagen) {
+            const pathImagenBorrar = path.join(__dirname, '../uploads', servicio.imagen);
+            if (fs.existsSync(pathImagenBorrar)) {
+                fs.unlinkSync(pathImagenBorrar)
+            }
+        }
+    } catch (error) {
+        console.log(error)
+    }
+    const { imagen } = req.files;
+    const nombreCortado = imagen.name.split('.')
+    const extension = nombreCortado[nombreCortado.length - 1]
+
+    const extensionesValidas = ['png', 'jpg', 'jpeg'];
+    if (!extensionesValidas.includes(extension)) {
+        return res.status(400).json({ msg: `La extensión ${extension} no es permitida, extensiones válidas ${extensionesValidas}` })
+    }
+
+    const nombreFinal = uuidv4() + '.' + extension
+    const uploadPath = path.join(__dirname, '../uploads', nombreFinal);
+
+
+    imagen.mv(uploadPath, (err) => {
+        if (err) {
+            console.log(err)
+        }
+    });
+
+    //Editar productos
     if (Productos && Array.isArray(Productos)) {
-
-        const servicio = await servicios.findOne({ _id: _id });
 
         if (!servicio) {
             return res.status(404).json({ error: 'Servicio no encontrado' });
@@ -115,9 +151,10 @@ const putservicio = async (req, res) => {
             updatedProductos.push(nuevoProducto);
         })
 
+
         const updatedProducto = await servicios.findByIdAndUpdate(
             { _id: _id },
-            { Nombre, Tiempo, Productos: updatedProductos, Precio, Descripcion, Imagen, Estado },
+            { Nombre, Tiempo, Productos: updatedProductos, Precio, Descripcion, imagen: nombreFinal, Estado },
             { new: true }
         );
         res.json({
