@@ -47,7 +47,7 @@ const patchinsumos = async (req, res) => {
 }
 
 const descontarInsumo = async (req, res) => {
-    const { _id } = req.body
+    const { _id, Cantidad } = req.body
     const insumo1 = await insumos.findOne({ _id });
 
     if (!insumo1) {
@@ -56,7 +56,7 @@ const descontarInsumo = async (req, res) => {
 
     if (insumo1.Cantidad >= 1) {
         //Restar el insumo
-        insumo1.Cantidad--;
+        insumo1.Cantidad -= Cantidad;
 
         await insumo1.save()
         return res.json({ insumo1 });

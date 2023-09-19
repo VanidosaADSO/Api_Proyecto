@@ -22,6 +22,8 @@ const postcompras = async (req, res) => {
         if (insumo) {
             insumo.Cantidad += Cantidad;
             await insumo.save();
+        }else{
+            console.log('Producto no encontrado')
         }
     }
 
