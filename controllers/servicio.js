@@ -68,11 +68,10 @@ const postservicio = async (req, res) => {
         await mvPromise(uploadPath); // Espera a que se complete la operación de mover la imagen
 
         // Ahora puedes guardar la información del producto en la base de datos
-        const { Nombre, Tiempo, Productos, Precio, Descripcion, Estado } = req.body;
+        const { Nombre, Tiempo, Precio, Descripcion, Estado } = req.body;
         const servicio1 = new servicios({
             Nombre,
             Tiempo,
-            Productos,
             Precio,
             Descripcion,
             Estado,
@@ -88,7 +87,7 @@ const postservicio = async (req, res) => {
 };
 
 const putservicio = async (req, res) => {
-    const { _id, Nombre, Tiempo, Productos, Precio, Descripcion, Estado } = req.body;
+    const { _id, Nombre, Tiempo, Precio, Descripcion, Estado } = req.body;
 
     const servicio = await servicios.findOne({ _id: _id });
 
@@ -127,44 +126,43 @@ const putservicio = async (req, res) => {
         }
     });
 
-    //Editar productos
-    if (Productos && Array.isArray(Productos)) {
+    // //Editar productos
+    // if (Productos && Array.isArray(Productos)) {
 
-        if (!servicio) {
-            return res.status(404).json({ error: 'Servicio no encontrado' });
-        }
+    //     if (!servicio) {
+    //         return res.status(404).json({ error: 'Servicio no encontrado' });
+    //     }
 
-        const updatedProductos = servicio.Productos.map(existingProducto => {
-            const productoData = Productos.find(p => p._id && p._id.toString() === existingProducto._id.toString());
-            if (productoData) {
-                if (productoData.eliminar) {
-                    return null;
-                }
-                const updatedProducto = { ...existingProducto.toObject(), ...productoData };
-                return updatedProducto;
-            }
-            return existingProducto;
-        }).filter(producto => producto !== null)
+    //     const updatedProductos = servicio.Productos.map(existingProducto => {
+    //         const productoData = Productos.find(p => p._id && p._id.toString() === existingProducto._id.toString());
+    //         if (productoData) {
+    //             if (productoData.eliminar) {
+    //                 return null;
+    //             }
+    //             const updatedProducto = { ...existingProducto.toObject(), ...productoData };
+    //             return updatedProducto;
+    //         }
+    //         return existingProducto;
+    //     }).filter(producto => producto !== null)
 
-        const nuevosProductos = Productos.filter(p => !p._id);
-        nuevosProductos.forEach(nuevoProducto => {
-            updatedProductos.push(nuevoProducto);
-        })
+    //     const nuevosProductos = Productos.filter(p => !p._id);
+    //     nuevosProductos.forEach(nuevoProducto => {
+    //         updatedProductos.push(nuevoProducto);
+    //     })
 
 
-        const updatedProducto = await servicios.findByIdAndUpdate(
-            { _id: _id },
-            { Nombre, Tiempo, Productos: updatedProductos, Precio, Descripcion, imagen: nombreFinal, Estado },
-            { new: true }
-        );
-        res.json({
-            msg: "Servicio actualizado exitosamente",
-            cita: updatedProducto
-        });
+    const updatedProducto = await servicios.findByIdAndUpdate(
+        { _id: _id },
+        { Nombre, Tiempo, Precio, Descripcion, imagen: nombreFinal, Estado }
+    );
+    res.json({
+        msg: "Servicio actualizado exitosamente",
+        cita: updatedProducto
+    });
 
-    } else {
-        res.status(400).json({ error: 'La propiedad Productos debe ser un array' });
-    }
+    // } else {
+    //     res.status(400).json({ error: 'La propiedad Productos debe ser un array' });
+    // }
 };
 
 const patchservicio = async (req, res) => {
