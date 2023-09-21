@@ -239,62 +239,18 @@ const putcitas = async (req, res) => {
 
 
 const patchcitas = async (req, res) => {
-  try {
-    const { _id, ConfirmarCita, Estado } = req.body;
+  const { _id, ConfirmarCita, Estado } = req.body;
 
-    // Encontrar la cita a actualizar
-    const citaToUpdate = await citas.findOne({ _id: _id });
-
-    if (!citaToUpdate) {
-      return res.status(404).json({ error: 'Cita no encontrada' });
-    }
-
-    // Actualizar la cita
-    citaToUpdate.Estado = Estado;
-    citaToUpdate.ConfirmarCita = ConfirmarCita;
-    await citaToUpdate.save();
-
-    // Obtener los nombres de los servicios de la cita
-    const serviciosCita = citaToUpdate.Servicios;
-
-    // Obtener los productos necesarios de la colección de servicios
-    const productosNecesarios = [];
-
-    for (const servicio of serviciosCita) {
-      const { Nombre } = servicio;
-      const servicioEncontrado = await servicios.findOne({ Nombre: Nombre });
-
-      if (!servicioEncontrado) {
-        console.log(`Servicio no encontrado: ${Nombre}`);
-        continue;
-      }
-
-      productosNecesarios.push(...servicioEncontrado.Productos);
-    }
-
-    // Actualizar la colección de insumos restando las cantidades
-    for (const producto of productosNecesarios) {
-      const insumo = await insumos.findOne({ Nombre: producto.Nombre });
-
-      if (!insumo) {
-        console.log(`Insumo no encontrado: ${producto.Nombre}`);
-        continue;
-      }
-
-      insumo.Cantidad -= producto.Cantidad;
-      await insumo.save();
-    }
-
-    res.json({
-      message: 'Cita actualizada y productos descontados exitosamente'
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error en el servidor' });
+  if (ConfirmarCita) {
+    await citas.findByIdAndUpdate(
+      { _id: _id },
+      { ConfirmarCita: ConfirmarCita })
+  }else{
+    await citas.findByIdAndUpdate(
+      { _id: _id },
+      { Estado: Estado })
   }
 };
-
-
 
 // Eliminar
 const deletecitas = async (req, res) => {

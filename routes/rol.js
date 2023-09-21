@@ -9,10 +9,7 @@ router.get('/', getRol)
 
 router.post('/', [
     check('Nombre', 'El nombre es un campo obligatorio').not().isEmpty(),
-
-    // check('Estado', 'El estado es un campo obligatorio').not().isEmpty(),
-    // check('Permisos', 'Se debe tener al menos un permiso' ).not().isEmpty(),
-
+    
     validarCampos
 ],
     postrol)

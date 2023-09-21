@@ -18,7 +18,6 @@ const rolSchema = Schema({
     },
     Permisos:{
         type:[PermisosSchema]
-        // required: [true, 'Se tiene que agregar al menos un permiso'],
     }
 })
 module.exports = model('Rol', rolSchema)

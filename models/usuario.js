@@ -36,10 +36,6 @@ const UsuarioSchema = Schema({
         type: String,
         required: [true, 'La contraseña es un campo obligatorio']
     },
-    // Imagen: {
-    //     type: String,
-    //     required: [true, 'La imagen es un campo obligatorio']
-    // },
     Rol: {
         type: String,
         required: [true, 'El rol es un campo obligatorio'],

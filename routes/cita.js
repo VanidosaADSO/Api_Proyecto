@@ -13,10 +13,8 @@ router.post('/', [
     check('Documento', 'EL campo documento es obligatorio').not().isEmpty(),
     check('Nombre', 'EL campo Nombre es obligatorio').not().isEmpty(),
     check('Apellidos', 'EL campo Apellidos es obligatorio').not().isEmpty(),
-    // check('Servicio', 'EL campo Servicio es obligatorio').not().isEmpty(),
     check('FechaCita', 'La fecha es obligatoria').not().isEmpty(),
     check('HoraCita', 'La hora es obligatoria').not().isEmpty(),
-    // check('Estado').not().isEmpty().withMessage('El Estado es un campo obligatorio'),
     validarCampos
 
 ], postcitas);

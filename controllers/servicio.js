@@ -126,31 +126,6 @@ const putservicio = async (req, res) => {
         }
     });
 
-    // //Editar productos
-    // if (Productos && Array.isArray(Productos)) {
-
-    //     if (!servicio) {
-    //         return res.status(404).json({ error: 'Servicio no encontrado' });
-    //     }
-
-    //     const updatedProductos = servicio.Productos.map(existingProducto => {
-    //         const productoData = Productos.find(p => p._id && p._id.toString() === existingProducto._id.toString());
-    //         if (productoData) {
-    //             if (productoData.eliminar) {
-    //                 return null;
-    //             }
-    //             const updatedProducto = { ...existingProducto.toObject(), ...productoData };
-    //             return updatedProducto;
-    //         }
-    //         return existingProducto;
-    //     }).filter(producto => producto !== null)
-
-    //     const nuevosProductos = Productos.filter(p => !p._id);
-    //     nuevosProductos.forEach(nuevoProducto => {
-    //         updatedProductos.push(nuevoProducto);
-    //     })
-
-
     const updatedProducto = await servicios.findByIdAndUpdate(
         { _id: _id },
         { Nombre, Tiempo, Precio, Descripcion, imagen: nombreFinal, Estado }
@@ -159,10 +134,6 @@ const putservicio = async (req, res) => {
         msg: "Servicio actualizado exitosamente",
         cita: updatedProducto
     });
-
-    // } else {
-    //     res.status(400).json({ error: 'La propiedad Productos debe ser un array' });
-    // }
 };
 
 const patchservicio = async (req, res) => {

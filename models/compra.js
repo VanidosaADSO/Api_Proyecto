@@ -44,7 +44,6 @@ const CompraSchema = Schema({
     },
     Total_factura: {
         type: Number,
-        // required: [true, 'El total de la factura es un campo obligatorio']
     },
     Estado: {
         type: Boolean,

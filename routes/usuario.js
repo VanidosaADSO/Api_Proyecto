@@ -26,8 +26,6 @@ router.post('/',[
 
     check('Rol', 'El rol no es valido').isIn(['Administrador', 'Empleado','Cliente']),
 
-    // check('Estado', 'El estado es un campo obligatorio').not().isEmpty(),
-
     validarCampos
 ], postUsuario)
 

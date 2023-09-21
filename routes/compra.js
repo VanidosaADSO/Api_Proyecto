@@ -18,12 +18,6 @@ router.post('/', [
 
     check('Productos', 'Es necesario agregar un producto').not().isEmpty(),
 
-    // check('Cantidad', 'la cantidad es un campo obligatorio').not().isEmpty(),
-
-    // check('Precio', 'el precio es un campo obligatorio').not().isEmpty(),
-
-    // check('Total_factura', 'el Total Factura es un campo obligatorio').not().isEmpty(),
-
     validarCampos
 ], postcompras)
 

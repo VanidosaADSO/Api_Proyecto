@@ -22,9 +22,6 @@ router.post('/', [
 
     check('Nit', 'El nit es debe de tener minimo 10 digitos').isLength({ min: 10 }),
 
-    // check('Estado', 'El estado es un campo obligatorio').not().isEmpty(),
-
-
     validarCampos
 ],
     postProveedor)

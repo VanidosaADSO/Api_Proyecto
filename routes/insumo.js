@@ -12,8 +12,6 @@ router.post('/', [
 
     check('Unidad_Medida', 'La unidad de medida es un campo obligatorio').not().isEmpty(),
 
-    // check('Estado', 'El estado es un campo obligatorio').not().isEmpty(),
-
     validarCampos
 ],
 

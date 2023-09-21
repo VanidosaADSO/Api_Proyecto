@@ -8,11 +8,11 @@ const { validarCampos } = require('../middlewares/validar-campos');
 router.post('/',
   [
     // Validaciones para los campos del servicio
-    // check('Nombre', 'El nombre es obligatorio').not().isEmpty(),
-    // check('Tiempo', 'El tiempo es obligatorio').not().isEmpty(),
-    // check('Precio', 'El precio es obligatorio').not().isEmpty(),
-    // check('Descripcion', 'La descripción es obligatoria').not().isEmpty(),
-    // validarCampos,
+    check('Nombre', 'El nombre es obligatorio').not().isEmpty(),
+    check('Tiempo', 'El tiempo es obligatorio').not().isEmpty(),
+    check('Precio', 'El precio es obligatorio').not().isEmpty(),
+    check('Descripcion', 'La descripción es obligatoria').not().isEmpty(),
+    validarCampos,
   ],
   postservicio
 );
